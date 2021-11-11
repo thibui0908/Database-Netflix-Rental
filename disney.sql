@@ -56,13 +56,15 @@ primary key (uID)
 );
 
 CREATE TABLE PAYMENT (
-pID int,
+pID int not null AUTO_INCREMENT,
 uID int,
 payment_date date,
 payment_amount int,
 FOREIGN KEY (uID) references User(uID),
 primary key (pID)
 );
+
+ALTER table USER AUTO_INCREMENT = 1;
 
 insert into User (name, age, rented, phone_number) values ('John Smith', 18, 0, '5103456789');
 insert into User (name, age, rented, phone_number) values ('Ella Kim', 25, 0, '4083456789');
