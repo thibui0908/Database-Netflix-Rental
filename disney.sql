@@ -83,7 +83,7 @@ primary key (show_id)
 );
 
 /*Trigger to decrease # of copies once title is rented */
-/*
+
 DROP TRIGGER IF EXISTS DecreaseCopies;
 DELIMITER //
 CREATE TRIGGER DecreaseCopies
@@ -97,20 +97,19 @@ END;
 //
 DELIMITER ;
 
-*/
 /*Trigger to remove rentals once title is returned */
-/*
-DROP TRIGGER IF EXISTS RentalReturned
+
+DROP TRIGGER IF EXISTS RentalReturned;
 DELIMITER //
 CREATE TRIGGER RentalReturned
 AFTER DELETE ON Rental 
 FOR EACH ROW
+BEGIN
 UPDATE Titles SET copies = copies + 1 where show_id  = old.show_id;
 END;
 //
 DELIMITER ;
 
-*/
 /*Trigger for updating date of updatedAt on insert */
 /*
 DROP TRIGGER IF EXISTS UpdatedAtOnInsert;
