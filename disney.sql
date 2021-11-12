@@ -29,11 +29,12 @@ CREATE TABLE User (
 uID int not null AUTO_INCREMENT,
 name varchar(50),
 age int,
+password varchar(50),
 rented int,
 phone_number char(10),
 primary key (uID)
 );
-ALTER table USER AUTO_INCREMENT = 1001;
+ALTER TABLE USER AUTO_INCREMENT = 1001;
 
 SET SQL_MODE='ALLOW_INVALID_DATES';
 
@@ -82,6 +83,7 @@ primary key (show_id)
 );
 
 /*Trigger to decrease # of copies once title is rented */
+/*
 DROP TRIGGER IF EXISTS DecreaseCopies;
 DELIMITER //
 CREATE TRIGGER DecreaseCopies
@@ -95,7 +97,9 @@ END;
 //
 DELIMITER ;
 
+*/
 /*Trigger to remove rentals once title is returned */
+/*
 DROP TRIGGER IF EXISTS RentalReturned
 DELIMITER //
 CREATE TRIGGER RentalReturned
@@ -106,7 +110,9 @@ END;
 //
 DELIMITER ;
 
+*/
 /*Trigger for updating date of updatedAt on insert */
+/*
 DROP TRIGGER IF EXISTS UpdatedAtOnInsert;
 DELIMITER //
 CREATE TRIGGER UpdatedAtOnInsert
@@ -118,7 +124,11 @@ END;
 //
 DELIMITER ;
 
+*/
+
 /*Trigger for updating date of updatedAt when modified */
+
+/*
 DROP TRIGGER IF EXISTS UpdatedAtOnUpdate;
 DELIMITER //
 CREATE TRIGGER UpdatedAtOnUpdate
@@ -130,7 +140,10 @@ END;
 //
 DELIMITER ;
 
+*/
+
 /*Procedure for archiving data into the Archive relation */
+/*
 DROP PROCEDURE IF EXISTS storedProcedure
 DELIMITER //
 CREATE PROCEDURE storedProcedure(IN cutoffDate DATE)
@@ -140,11 +153,11 @@ BEGIN
 END; //
 DELIMITER ;
 
-ALTER table USER AUTO_INCREMENT = 1;
+*/
 
-insert into User (name, age, rented, phone_number) values ('John Smith', 18, 0, '5103456789');
-insert into User (name, age, rented, phone_number) values ('Ella Kim', 25, 0, '4083456789');
-insert into User (name, age, rented, phone_number) values ('Mary Martinez', 13, 0, '5108889999');
+insert into User (name, age, rented, phone_number, password) values ('John Smith', 18, 0, '5103456789', 'abcd1234');
+insert into User (name, age, rented, phone_number, password) values ('Ella Kim', 25, 0, '4083456789', '1234abcd');
+insert into User (name, age, rented, phone_number, password) values ('Mary Martinez', 13, 0, '5108889999', 'efgh5678');
 
 SET GLOBAL local_infile=1;
 
