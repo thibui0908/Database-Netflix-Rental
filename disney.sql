@@ -21,7 +21,8 @@ duration varchar(20),
 description varchar(250),
 copies int not null,
 price float not null,
-primary key (show_id)
+primary key (show_id),
+updatedAt date
 );
 
 CREATE TABLE User (
@@ -63,6 +64,81 @@ payment_amount int,
 FOREIGN KEY (uID) references User(uID),
 primary key (pID)
 );
+
+CREATE TABLE Archive (
+show_id varchar(10),
+type varchar(20),
+title varchar(50) not null,
+director varchar(50),
+cast varchar(250),
+country varchar(50),
+release_year int,
+rating varchar(20),
+duration varchar(20),
+description varchar(250),
+copies int not null,
+price float not null,
+primary key (show_id)
+);
+
+/*Trigger to decrease # of copies once title is rented */
+DROP TRIGGER IF EXISTS DecreaseCopies;
+DELIMITER //
+CREATE TRIGGER DecreaseCopies
+AFTER INSERT ON Rental
+FOR EACH ROW
+BEGIN
+	IF (copies >0 and New.show_id=show_id) THEN
+	UPDATE Titles SET copies= copies - 1 where show_id = new.show_id;
+	END IF;
+END;
+//
+DELIMITER ;
+
+/*Trigger to remove rentals once title is returned */
+DROP TRIGGER IF EXISTS RentalReturned
+DELIMITER //
+CREATE TRIGGER RentalReturned
+AFTER DELETE ON Rental 
+FOR EACH ROW
+UPDATE Titles SET copies = copies + 1 where show_id  = old.show_id;
+END;
+//
+DELIMITER ;
+
+/*Trigger for updating date of updatedAt on insert */
+DROP TRIGGER IF EXISTS UpdatedAtOnInsert;
+DELIMITER //
+CREATE TRIGGER UpdatedAtOnInsert
+AFTER INSERT ON Titles
+FOR EACH ROW
+BEGIN
+	Update Titles set updatedAt = current_date WHERE show_id = new.show_id;
+END;
+//
+DELIMITER ;
+
+/*Trigger for updating date of updatedAt when modified */
+DROP TRIGGER IF EXISTS UpdatedAtOnUpdate;
+DELIMITER //
+CREATE TRIGGER UpdatedAtOnUpdate
+AFTER UPDATE ON Titles
+FOR EACH ROW
+BEGIN
+	Update Titles set updatedAt = current_date WHERE show_id = new.show_id;
+END;
+//
+DELIMITER ;
+
+/*Procedure for archiving data into the Archive relation */
+DROP PROCEDURE IF EXISTS storedProcedure
+DELIMITER //
+CREATE PROCEDURE storedProcedure(IN cutoffDate DATE)
+BEGIN 
+	INSERT INTO Archive (SELECT * FROM Titles WHERE (updatedAt<cutoffDate));
+	DELETE FROM Titles WHERE (updatedAt<cutoffDate);
+END; //
+DELIMITER ;
 
 ALTER table USER AUTO_INCREMENT = 1;
 
