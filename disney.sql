@@ -110,48 +110,49 @@ END;
 //
 DELIMITER ;
 
+
 /*Trigger for updating date of updatedAt on insert */
-/*
+
 DROP TRIGGER IF EXISTS UpdatedAtOnInsert;
 DELIMITER //
 CREATE TRIGGER UpdatedAtOnInsert
-AFTER INSERT ON Titles
+BEFORE INSERT ON Titles
 FOR EACH ROW
 BEGIN
-	Update Titles set updatedAt = current_date WHERE show_id = new.show_id;
+	SET New.updatedAt = current_date;
 END;
 //
 DELIMITER ;
 
-*/
 
 /*Trigger for updating date of updatedAt when modified */
 
-/*
 DROP TRIGGER IF EXISTS UpdatedAtOnUpdate;
 DELIMITER //
 CREATE TRIGGER UpdatedAtOnUpdate
-AFTER UPDATE ON Titles
+BEFORE UPDATE ON Titles
 FOR EACH ROW
 BEGIN
-	Update Titles set updatedAt = current_date WHERE show_id = new.show_id;
+	Set New.updatedAt = current_date;
 END;
 //
 DELIMITER ;
 
-*/
-
 /*Procedure for archiving data into the Archive relation */
-/*
 DROP PROCEDURE IF EXISTS storedProcedure
 DELIMITER //
 CREATE PROCEDURE storedProcedure(IN cutoffDate DATE)
 BEGIN 
-	INSERT INTO Archive (SELECT * FROM Titles WHERE (updatedAt<cutoffDate));
+	INSERT INTO Archive (SELECT show_id, type, title, director, cast, country, release_year, rating, duration, description, copies, price FROM Titles WHERE (updatedAt<cutoffDate));
 	DELETE FROM Titles WHERE (updatedAt<cutoffDate);
 END; //
 DELIMITER ;
 
+
+/*Commands to test storing procedure */
+/*
+INSERT INTO Titles Values('s100', 'Movie', 'Adventures in Babysitting', 'Chris Columbus', 'Elisabeth Shue, Maia Brewton, Keith Coogan, Anthony Rapp, Calvin Levels, Vincent Phillip D\'Onofrio', 'United States', '1987', 'TV-PG', '102 min', 'A seemingly quiet night turns into a wild expedition for a teen babysitter.', '4', '6', NULL);
+call storedProcedure("2021-11-13");
 */
 
 insert into User (name, age, rented, phone_number, password) values ('John Smith', 18, 0, '5103456789', 'abcd1234');
@@ -161,7 +162,7 @@ insert into User (name, age, rented, phone_number, password) values ('Mary Marti
 SET GLOBAL local_infile=1;
 
 /* Change the source to your directory */
-LOAD DATA LOCAL INFILE '/Users/Diane/CS157A/Project/disney_plus_titles.csv' INTO TABLE TITLES 
+LOAD DATA LOCAL INFILE '/Users/albertle/Documents/GitHub/Database-Netflix-Rental/disney_plus_titles.csv' INTO TABLE TITLES 
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
