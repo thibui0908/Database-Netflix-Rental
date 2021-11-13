@@ -15,10 +15,7 @@ import com.mysql.cj.util.StringUtils;
 public class Member {
 	
 	private String uID;
-	private String name;
-	private int age;
-	private String phoneNumber;
-	
+	private String name;	
 	private boolean logout = false;
 	
 	Scanner scanner = new Scanner(System.in);
@@ -94,7 +91,7 @@ public class Member {
 				this.name = result.getString(1);
 				this.uID = uID;
 				this.logout = false;
-				//Switch to user's main menu
+				userPortal();
 			} else {
 				
 				System.out.println("User cannot be found. Please try again");
@@ -106,7 +103,41 @@ public class Member {
 		} 
 		
 		memberlogin();
+	}
+	
+	public void userPortal() {
+		System.out.println();
+		System.out.println("Welcome back! What would you like to do today?");
+		System.out.println("[1] Search   [2] Rental   [3] Billing   [4] Log out");
+		System.out.println();
 		
+		String response = scanner.nextLine().trim();
+		
+		if (response.equals("1")) {
+			/*
+			 * Search for a movie -> new method 
+			 * Should be options of searching methods
+			 * By name/ director/ rating / year
+			 * Filter maybe? 
+			 */
+		} else if (response.equals("2")) {
+			/*
+			 * Check current rentals for that user only
+			 */
+			
+		} else if  (response.equals("3")) {
+			/*
+			 * Handles billings and payments for users
+			 */
+			
+		} else if (response.equals("4")) {
+			return;
+		}
+		else if (response.length() > 1) {
+			System.out.println("Please enter only the number option");
+		} else {
+			System.out.println("There seems to be an error. Please try again");
+		}
 	}
 	
 	/*
@@ -152,9 +183,8 @@ public class Member {
 		
 		try {
 		
-			String query = "INSERT INTO User (name, age, password, phone_number) values (?,?,?,?)";
-			
-			
+			String query = "INSERT INTO User (name, age, password, phone_number)"
+							+ " values (?,?,?,?)";
 			
 			statement = conn.prepareStatement(query, 
 							 Statement.RETURN_GENERATED_KEYS);
