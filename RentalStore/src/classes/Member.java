@@ -15,7 +15,10 @@ import com.mysql.cj.util.StringUtils;
 public class Member {
 	
 	private String uID;
-	private String name;	
+	private String name;
+	private int age;
+	private String phoneNumber;
+	
 	private boolean logout = false;
 	
 	Scanner scanner = new Scanner(System.in);
@@ -36,13 +39,17 @@ public class Member {
 		}
 		
 		System.out.println("Hi there! Select an option below:");
-		System.out.println("[1] Sign in   [2] Sign up   [3] Exit");
+		System.out.println("[1] Sign in   [2] Sign up [3] Exit");
 		System.out.println();
 		
 		String response = scanner.nextLine().trim();
 		
 		if (response.equals("1")) {
-			signin();
+			/*
+			 * Handle for member log in 
+			 * Take in userID and password
+			 * 
+			 */
 		} else if (response.equals("2")) {
 			signup();
 		} else if  (response.equals("3")) {
@@ -56,89 +63,6 @@ public class Member {
 
 	}
 	
-	public void signin() {
-		System.out.println();
-		System.out.println("Enter your member ID: ");
-		String uID = scanner.nextLine().trim();
-		
-		if (uID.length() != 4) {
-			System.out.println("Invalid user ID, please try again");
-			uID = scanner.nextLine().trim();
-		}
-		
-		System.out.println();
-		System.out.println("Enter your password");
-		String password = scanner.nextLine().trim();
-		
-		if (password.isEmpty()) {
-			System.out.println("Password cannot be empty, try again!");
-			password = scanner.nextLine().trim();
-		}
-		
-		try {
-			Statement statement = conn.createStatement();
-			String query = "SELECT name from User where uID =" + uID + " and password = '" + password + "'";
-			
-			System.out.println(query);
-			
-			statement.executeQuery(query);
-			
-			ResultSet result = statement.getResultSet();
-			
-			if (result.next()) {
-				System.out.println("You have successfully signed in!");
-				System.out.println("Good to see you again, " + result.getString("name") + "!\n");
-				this.name = result.getString(1);
-				this.uID = uID;
-				this.logout = false;
-				userPortal();
-			} else {
-				
-				System.out.println("User cannot be found. Please try again");
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("There seems to be an error. Please try again");
-			System.out.println("System message: " + e.getMessage());
-		} 
-		
-		memberlogin();
-	}
-	
-	public void userPortal() {
-		System.out.println();
-		System.out.println("Welcome back! What would you like to do today?");
-		System.out.println("[1] Search   [2] Rental   [3] Billing   [4] Log out");
-		System.out.println();
-		
-		String response = scanner.nextLine().trim();
-		
-		if (response.equals("1")) {
-			/*
-			 * Search for a movie -> new method 
-			 * Should be options of searching methods
-			 * By name/ director/ rating / year
-			 * Filter maybe? 
-			 */
-		} else if (response.equals("2")) {
-			/*
-			 * Check current rentals for that user only
-			 */
-			
-		} else if  (response.equals("3")) {
-			/*
-			 * Handles billings and payments for users
-			 */
-			
-		} else if (response.equals("4")) {
-			return;
-		}
-		else if (response.length() > 1) {
-			System.out.println("Please enter only the number option");
-		} else {
-			System.out.println("There seems to be an error. Please try again");
-		}
-	}
 	
 	/*
 	 * Create a new user when user sign up
@@ -183,11 +107,13 @@ public class Member {
 		
 		try {
 		
-			String query = "INSERT INTO User (name, age, password, phone_number)"
-							+ " values (?,?,?,?)";
+			String query = "INSERT INTO User (name, age, password, phone_number) values (?,?,?,?)";
 			
-			statement = conn.prepareStatement(query, 
-							 Statement.RETURN_GENERATED_KEYS);
+			
+			
+			statement = conn.prepareStatement(
+											query, 
+											Statement.RETURN_GENERATED_KEYS);
 			
 			statement.setString(1, name);
 			statement.setInt(2, age);
@@ -211,7 +137,6 @@ public class Member {
 			System.out.println("System message: " + e.getMessage());
 		} 
 		
-		memberlogin();
 	}
 	
 }
