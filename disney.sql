@@ -139,8 +139,8 @@ END;
 DELIMITER ;
 
 /*Procedure for archiving data into the Archive relation */
-/*
-DROP PROCEDURE IF EXISTS storedProcedure
+
+DROP PROCEDURE IF EXISTS storedProcedure;
 DELIMITER //
 CREATE PROCEDURE storedProcedure(IN cutoffDate DATE)
 BEGIN 
@@ -148,7 +148,6 @@ BEGIN
 	DELETE FROM Titles WHERE (updatedAt<cutoffDate);
 END; //
 DELIMITER ;
-*/
 
 /*Procedure for user authentication*/
 
