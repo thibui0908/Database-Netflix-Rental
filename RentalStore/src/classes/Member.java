@@ -39,17 +39,13 @@ public class Member {
 		}
 		
 		System.out.println("Hi there! Select an option below:");
-		System.out.println("[1] Sign in   [2] Sign up [3] Exit");
+		System.out.println("[1] Sign in   [2] Sign up   [3] Exit");
 		System.out.println();
 		
 		String response = scanner.nextLine().trim();
 		
 		if (response.equals("1")) {
-			/*
-			 * Handle for member log in 
-			 * Take in userID and password
-			 * 
-			 */
+			signin();
 		} else if (response.equals("2")) {
 			signup();
 		} else if  (response.equals("3")) {
@@ -63,6 +59,55 @@ public class Member {
 
 	}
 	
+	public void signin() {
+		System.out.println();
+		System.out.println("Enter your member ID: ");
+		String uID = scanner.nextLine().trim();
+		
+		if (uID.length() != 4) {
+			System.out.println("Invalid user ID, please try again");
+			uID = scanner.nextLine().trim();
+		}
+		
+		System.out.println();
+		System.out.println("Enter your password");
+		String password = scanner.nextLine().trim();
+		
+		if (password.isEmpty()) {
+			System.out.println("Password cannot be empty, try again!");
+			password = scanner.nextLine().trim();
+		}
+		
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT name from User where uID =" + uID + " and password = '" + password + "'";
+			
+			System.out.println(query);
+			
+			statement.executeQuery(query);
+			
+			ResultSet result = statement.getResultSet();
+			
+			if (result.next()) {
+				System.out.println("You have successfully signed in!");
+				System.out.println("Good to see you again, " + result.getString("name") + "!\n");
+				this.name = result.getString(1);
+				this.uID = uID;
+				this.logout = false;
+				//Switch to user's main menu
+			} else {
+				
+				System.out.println("User cannot be found. Please try again");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("There seems to be an error. Please try again");
+			System.out.println("System message: " + e.getMessage());
+		} 
+		
+		memberlogin();
+		
+	}
 	
 	/*
 	 * Create a new user when user sign up
@@ -111,9 +156,8 @@ public class Member {
 			
 			
 			
-			statement = conn.prepareStatement(
-											query, 
-											Statement.RETURN_GENERATED_KEYS);
+			statement = conn.prepareStatement(query, 
+							 Statement.RETURN_GENERATED_KEYS);
 			
 			statement.setString(1, name);
 			statement.setInt(2, age);
@@ -137,6 +181,7 @@ public class Member {
 			System.out.println("System message: " + e.getMessage());
 		} 
 		
+		memberlogin();
 	}
 	
 }
