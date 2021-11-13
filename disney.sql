@@ -139,6 +139,7 @@ END;
 DELIMITER ;
 
 /*Procedure for archiving data into the Archive relation */
+/*
 DROP PROCEDURE IF EXISTS storedProcedure
 DELIMITER //
 CREATE PROCEDURE storedProcedure(IN cutoffDate DATE)
@@ -147,7 +148,17 @@ BEGIN
 	DELETE FROM Titles WHERE (updatedAt<cutoffDate);
 END; //
 DELIMITER ;
+*/
 
+/*Procedure for user authentication*/
+
+DROP PROCEDURE IF EXISTS userLogin;
+DELIMITER //
+CREATE PROCEDURE userLogin(IN param_uID INT, param_password varchar(50))
+BEGIN 
+	SELECT name FROM User where uID = param_uID and password = param_password ;
+END //
+DELIMITER ;
 
 /*Commands to test storing procedure */
 /*
@@ -162,7 +173,7 @@ insert into User (name, age, rented, phone_number, password) values ('Mary Marti
 SET GLOBAL local_infile=1;
 
 /* Change the source to your directory */
-LOAD DATA LOCAL INFILE '/Users/albertle/Documents/GitHub/Database-Netflix-Rental/disney_plus_titles.csv' INTO TABLE TITLES 
+LOAD DATA LOCAL INFILE '/Users/Diane/CS157A/Project/disney_plus_titles.csv' INTO TABLE TITLES 
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'

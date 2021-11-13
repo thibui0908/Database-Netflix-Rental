@@ -1,5 +1,6 @@
 package classes;
 import java.util.Scanner;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import com.mysql.cj.util.StringUtils;
+import com.mysql.cj.xdevapi.Result;
 
 
 public class Member {
@@ -76,19 +79,19 @@ public class Member {
 		}
 		
 		try {
-			Statement statement = conn.createStatement();
-			String query = "SELECT name from User where uID =" + uID + " and password = '" + password + "'";
+			CallableStatement statement = conn.prepareCall("{CALL userLogin(?,?)}");
 			
-			System.out.println(query);
+			statement.setInt(1, Integer.parseInt(uID));
+			statement.setString(2, password);
+
+			boolean result = statement.execute();
 			
-			statement.executeQuery(query);
-			
-			ResultSet result = statement.getResultSet();
-			
-			if (result.next()) {
+			if (result) {
+				ResultSet rs = statement.getResultSet();
+				rs.next();
 				System.out.println("You have successfully signed in!");
-				System.out.println("Good to see you again, " + result.getString("name") + "!\n");
-				this.name = result.getString(1);
+				System.out.println("Good to see you again, " + rs.getString(1) + "!\n");
+				this.name = rs.getString(1);
 				this.uID = uID;
 				this.logout = false;
 				userPortal();
@@ -108,7 +111,7 @@ public class Member {
 	public void userPortal() {
 		System.out.println();
 		System.out.println("Welcome back! What would you like to do today?");
-		System.out.println("[1] Search   [2] Rental   [3] Billing   [4] Log out");
+		System.out.println("[1] Search   [2] Browse   [3] Rental   [4] Billing   [5] Log out");
 		System.out.println();
 		
 		String response = scanner.nextLine().trim();
@@ -118,19 +121,117 @@ public class Member {
 			 * Search for a movie -> new method 
 			 * Should be options of searching methods
 			 * By name/ director/ rating / year
-			 * Filter maybe? 
 			 */
+			System.out.println();
+			System.out.println("How would you like to look up your show / movie?");
+			System.out.println();
+			System.out.println("[1] Director   [2] Title name   [3] Rating   [4] Year");
+			
+			response = scanner.nextLine().trim();
+			
+			String director, name, rating, releaseYear = "";
+			
+			if (response.equals("1")) {
+				System.out.println();
+				System.out.println("Enter a director's name: ");
+				director = scanner.nextLine().trim();
+				if (director.isEmpty()) {
+					System.out.println("Name must not be empty!");
+					director = scanner.nextLine().trim();
+				}
+				
+			} else if (response.equals("2")) {
+				System.out.println();
+				System.out.println("Enter a title: ");
+				name = scanner.nextLine().trim();
+				if (name.isEmpty()) {
+					System.out.println("Rating must not be empty!");
+					name = scanner.nextLine().trim();
+				}
+			} else if  (response.equals("3")) {
+				System.out.println();
+				System.out.println("Enter a rating type: ");
+				rating = scanner.nextLine().trim();
+				if (rating.isEmpty()) {
+					System.out.println("Rating must not be empty!");
+					rating = scanner.nextLine().trim();
+				}
+			} else if (response.equals("4")) {
+				System.out.println();
+				System.out.println("Enter a director's name: ");
+				releaseYear = scanner.nextLine().trim();
+				if (releaseYear.isEmpty()) {
+					System.out.println("Year must not be empty!");
+					releaseYear = scanner.nextLine().trim();
+				}
+			} else {
+				System.out.println("There seems to be an error. Please try again");
+			}
+			
+			
 		} else if (response.equals("2")) {
+			System.out.println();
+			System.out.println("How would you like to browse?");
+			System.out.println();
+			System.out.println("[1] Director   [2] Title name   [3] Rating   [4] Year");
+			
+			response = scanner.nextLine().trim();
+			
+			String director, name, rating, releaseYear = "";
+			
+			if (response.equals("1")) {
+				System.out.println();
+				System.out.println("Enter a director's name: ");
+				director = scanner.nextLine().trim();
+				if (director.isEmpty()) {
+					System.out.println("Name must not be empty!");
+					director = scanner.nextLine().trim();
+				}
+				
+			} else if (response.equals("2")) {
+				System.out.println();
+				System.out.println("Enter a title: ");
+				name = scanner.nextLine().trim();
+				if (name.isEmpty()) {
+					System.out.println("Rating must not be empty!");
+					name = scanner.nextLine().trim();
+				}
+			} else if  (response.equals("3")) {
+				System.out.println();
+				System.out.println("Enter a rating type: ");
+				rating = scanner.nextLine().trim();
+				if (rating.isEmpty()) {
+					System.out.println("Rating must not be empty!");
+					rating = scanner.nextLine().trim();
+				}
+				
+				searchResult("rating", rating);
+				
+			} else if (response.equals("4")) {
+				System.out.println();
+				System.out.println("Enter a director's name: ");
+				releaseYear = scanner.nextLine().trim();
+				if (releaseYear.isEmpty()) {
+					System.out.println("Year must not be empty!");
+					releaseYear = scanner.nextLine().trim();
+				}
+			} else {
+				System.out.println("There seems to be an error. Please try again");
+			}
+			
+			
+		} else if (response.equals("3")) {
+			
 			/*
 			 * Check current rentals for that user only
 			 */
 			
-		} else if  (response.equals("3")) {
+		} else if (response.equals("4")) {
 			/*
 			 * Handles billings and payments for users
 			 */
 			
-		} else if (response.equals("4")) {
+		} else if (response.equals("5")) {
 			return;
 		}
 		else if (response.length() > 1) {
@@ -138,6 +239,30 @@ public class Member {
 		} else {
 			System.out.println("There seems to be an error. Please try again");
 		}
+		System.out.println();
+		return;
+	}
+	
+	public void searchResult(String attribute, String param) {
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT distinct title from Titles where " + attribute + "= '" + param + "'";
+			
+			statement.executeQuery(query);
+			
+			ResultSet result = statement.getResultSet();
+			
+			System.out.println();
+			System.out.println("Here are your results: ");
+			
+			while (result.next()) {
+				System.out.println(result.getNString("title"));
+			}
+				
+		} catch (SQLException e) {
+			System.out.println("There seems to be an error. Please try again");
+			System.out.println("System message: " + e.getMessage());
+		} 		
 	}
 	
 	/*
