@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
@@ -59,6 +58,11 @@ public class Member {
 
 	}
 	
+	/*
+	 * Handle user sign in 
+	 * Take in user's ID and password
+	 * Redirect to user's portal if succeed
+	 */
 	public void signin() {
 		System.out.println();
 		System.out.println("Enter your member ID: ");
@@ -108,6 +112,10 @@ public class Member {
 		memberlogin();
 	}
 	
+	/*
+	 * Handle user's requests after successful log in
+	 * For each activity we redirect to a different method
+	 */
 	public void userPortal() {
 		System.out.println();
 		System.out.println("Welcome back! What would you like to do today?");
@@ -117,109 +125,10 @@ public class Member {
 		String response = scanner.nextLine().trim();
 		
 		if (response.equals("1")) {
-			/*
-			 * Search for a movie -> new method 
-			 * Should be options of searching methods
-			 * By name/ director/ rating / year
-			 */
-			System.out.println();
-			System.out.println("How would you like to look up your show / movie?");
-			System.out.println();
-			System.out.println("[1] Director   [2] Title name   [3] Rating   [4] Year");
-			
-			response = scanner.nextLine().trim();
-			
-			String director, name, rating, releaseYear = "";
-			
-			if (response.equals("1")) {
-				System.out.println();
-				System.out.println("Enter a director's name: ");
-				director = scanner.nextLine().trim();
-				if (director.isEmpty()) {
-					System.out.println("Name must not be empty!");
-					director = scanner.nextLine().trim();
-				}
-				
-			} else if (response.equals("2")) {
-				System.out.println();
-				System.out.println("Enter a title: ");
-				name = scanner.nextLine().trim();
-				if (name.isEmpty()) {
-					System.out.println("Rating must not be empty!");
-					name = scanner.nextLine().trim();
-				}
-			} else if  (response.equals("3")) {
-				System.out.println();
-				System.out.println("Enter a rating type: ");
-				rating = scanner.nextLine().trim();
-				if (rating.isEmpty()) {
-					System.out.println("Rating must not be empty!");
-					rating = scanner.nextLine().trim();
-				}
-			} else if (response.equals("4")) {
-				System.out.println();
-				System.out.println("Enter a director's name: ");
-				releaseYear = scanner.nextLine().trim();
-				if (releaseYear.isEmpty()) {
-					System.out.println("Year must not be empty!");
-					releaseYear = scanner.nextLine().trim();
-				}
-			} else {
-				System.out.println("There seems to be an error. Please try again");
-			}
-			
+			search();
 			
 		} else if (response.equals("2")) {
-			System.out.println();
-			System.out.println("How would you like to browse?");
-			System.out.println();
-			System.out.println("[1] Director   [2] Title name   [3] Rating   [4] Year");
-			
-			response = scanner.nextLine().trim();
-			
-			String director, name, rating, releaseYear = "";
-			
-			if (response.equals("1")) {
-				System.out.println();
-				System.out.println("Enter a director's name: ");
-				director = scanner.nextLine().trim();
-				if (director.isEmpty()) {
-					System.out.println("Name must not be empty!");
-					director = scanner.nextLine().trim();
-				}
-				
-			} else if (response.equals("2")) {
-				System.out.println();
-				System.out.println("Enter a title: ");
-				name = scanner.nextLine().trim();
-				if (name.isEmpty()) {
-					System.out.println("Rating must not be empty!");
-					name = scanner.nextLine().trim();
-				}
-			} else if  (response.equals("3")) {
-				System.out.println();
-				System.out.println("Enter a rating type: ");
-				rating = scanner.nextLine().trim();
-				if (rating.isEmpty()) {
-					System.out.println("Rating must not be empty!");
-					rating = scanner.nextLine().trim();
-				}
-				
-				searchResult("rating", rating);
-				
-			} else if (response.equals("4")) {
-				System.out.println();
-				System.out.println("Enter a director's name: ");
-				releaseYear = scanner.nextLine().trim();
-				if (releaseYear.isEmpty()) {
-					System.out.println("Year must not be empty!");
-					releaseYear = scanner.nextLine().trim();
-				}
-			} else {
-				System.out.println("There seems to be an error. Please try again");
-			}
-			
-			
+			browse();
 		} else if (response.equals("3")) {
 			
 			/*
@@ -241,6 +150,72 @@ public class Member {
 		}
 		System.out.println();
 		return;
+	}
+	
+	public void browse() {
+		System.out.println();
+		System.out.println("How would you like to browse?");
+		System.out.println();
+		System.out.println("[1] Director [2] Rating   [3] Year");
+		
+		String response = scanner.nextLine().trim();
+		
+		String director, rating, releaseYear = "";
+		
+		if (response.equals("1")) {
+			System.out.println();
+			System.out.println("Enter a director's name: ");
+			director = scanner.nextLine().trim();
+			if (director.isEmpty()) {
+				System.out.println("Name must not be empty!");
+				director = scanner.nextLine().trim();
+			}
+			
+		} else if  (response.equals("2")) {
+			System.out.println();
+			System.out.println("Enter a rating type: ");
+			rating = scanner.nextLine().trim();
+			if (rating.isEmpty()) {
+				System.out.println("Rating must not be empty!");
+				rating = scanner.nextLine().trim();
+			}
+			
+			searchResult("rating", rating);
+			
+		} else if (response.equals("3")) {
+			System.out.println();
+			System.out.println("Enter a director's name: ");
+			releaseYear = scanner.nextLine().trim();
+			if (releaseYear.isEmpty()) {
+				System.out.println("Year must not be empty!");
+				releaseYear = scanner.nextLine().trim();
+			}
+		} else {
+			System.out.println("There seems to be an error. Please try again");
+		}
+
+	}
+	
+	/*
+	 * Search for a movie -> new method 
+	 * Enter title only
+	 */
+	public void search() {
+		System.out.println();
+		System.out.println("Enter title: ");
+		
+		String response = scanner.nextLine().trim();
+		
+		String name = "";
+	
+		
+		System.out.println();
+		System.out.println("Enter a title: ");
+		name = scanner.nextLine().trim();
+		while (name.isEmpty()) {
+			System.out.println("Rating must not be empty!");
+			name = scanner.nextLine().trim();
+		}
 	}
 	
 	public void searchResult(String attribute, String param) {
@@ -270,6 +245,9 @@ public class Member {
 	 * Will return their ID so they can log in next time 
 	 */
 	public void signup() {
+		
+		// Take in user's required parameters
+		
 		System.out.println("Enter a name: ");
 		String name = scanner.nextLine().trim();
 		
@@ -290,6 +268,9 @@ public class Member {
 		
 		int age = 0;
 		
+		// Handle age request
+		// Should only be integer
+		
 		try {
 			age = Integer.parseInt(scanner.nextLine().trim());
 		} catch (NumberFormatException e) {
@@ -304,6 +285,9 @@ public class Member {
 			phoneNumber = scanner.nextLine().trim();
 		}
 
+		// Create a statement to connect to JDBC
+		// Send SQL statement
+		
 		PreparedStatement statement = null;
 		
 		try {
@@ -324,6 +308,9 @@ public class Member {
 			ResultSet result = statement.getGeneratedKeys();
 			
 			if (result.next()) {
+				
+				// Return the user's ID
+				
 				System.out.println("You have successfully registered!");
 				System.out.println("Your ID is : " + result.getInt(1) + "\n");
 			} else {
@@ -331,7 +318,8 @@ public class Member {
 				System.out.println("Registration failed. Please try again");
 			}
 			
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			System.out.println("There seems to be an error. Please try again");
 			System.out.println("System message: " + e.getMessage());
 		} 
