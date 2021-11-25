@@ -7,11 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import com.mysql.cj.util.StringUtils;
-import com.mysql.cj.xdevapi.Result;
 
 
 public class Member {
@@ -138,6 +133,7 @@ public class Member {
 		} else if (response.equals("4")) {
 			Billing billing = new Billing(uID, name);			
 		} else if (response.equals("5")) {
+			logout = true;
 			return;
 		}
 		else if (response.length() > 1) {
@@ -204,7 +200,7 @@ public class Member {
 		String name = scanner.nextLine().trim();
 
 		while (name.isEmpty()) {
-			System.out.println("Rating must not be empty!");
+			System.out.println("Title must not be empty!");
 			name = scanner.nextLine().trim();
 		}
 		
