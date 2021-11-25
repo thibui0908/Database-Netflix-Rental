@@ -202,20 +202,16 @@ public class Member {
 	 */
 	public void search() {
 		System.out.println();
-		System.out.println("Enter title: ");
-		
-		String response = scanner.nextLine().trim();
-		
-		String name = "";
-	
-		
-		System.out.println();
 		System.out.println("Enter a title: ");
-		name = scanner.nextLine().trim();
+		
+		String name = scanner.nextLine().trim();
+
 		while (name.isEmpty()) {
 			System.out.println("Rating must not be empty!");
 			name = scanner.nextLine().trim();
 		}
+		
+		searchResult("title", name);
 	}
 	
 	public void searchResult(String attribute, String param) {
