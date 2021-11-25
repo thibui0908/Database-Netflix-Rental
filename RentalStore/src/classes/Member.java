@@ -136,10 +136,7 @@ public class Member {
 			 */
 			
 		} else if (response.equals("4")) {
-			/*
-			 * Handles billings and payments for users
-			 */
-			
+			Billing billing = new Billing(uID, name);			
 		} else if (response.equals("5")) {
 			return;
 		}
