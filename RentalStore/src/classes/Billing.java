@@ -50,7 +50,6 @@ public class Billing {
 			String query = "INSERT into Billing values(" + uID + ",'" + name + "','" + address + "', 0)";
 			
 			statement.executeUpdate(query);
-			
 			System.out.println();
 			System.out.print("Your billing account has been succesfully setup. ");
 		} catch (SQLException e) {
@@ -66,7 +65,7 @@ public class Billing {
 	public void billingPortal() {
 		System.out.println();
 		System.out.println("What would you like to do today?");
-		System.out.println("[1] View Balance   [2] Add Balance   [3] View Address   [4] Make payment   [5] Return");
+		System.out.println("[1] View Balance   [2] View Address   [3] Edit Address   [4] Make payment   [5] Return");
 		System.out.println();
 		
 		String response = scanner.nextLine().trim();
@@ -74,11 +73,11 @@ public class Billing {
 		if (response.equals("1")) {
 			getBalance();
 		} else if (response.equals("2")) {
-			addBalance();
-		} else if (response.equals("3")) {
 			getAddress();
+		} else if (response.equals("3")) {
+			editAddress();
 		} else if (response.equals("4")) {
-			//other functionality
+
 			Payment pm = new Payment();
 			pm.paymentPortal(uID);
 		} else if (response.equals("5")) {
@@ -119,27 +118,6 @@ public class Billing {
 			System.out.println("System message: " + e.getMessage());
 		}
 		return billingExists; 		
-	}
-	
-	/*
-	 * Handles user's request to add to their current balance. 
-	 */
-	public void addBalance() {
-		try {
-			System.out.println();
-			System.out.println("How much would you like to add to your billing balance?");
-			
-			int amount = scanner.nextInt();
-			Statement statement = conn.createStatement();
-			String query = "UPDATE Billing set balance = balance + " + amount + " where uID = " + uID + "";
-			
-			statement.executeUpdate(query);			
-			System.out.println();
-			System.out.print("Your balance has been successfully updated. ");
-		} catch (SQLException e) {
-			System.out.println("There seems to be an error. Please try again");
-			System.out.println("System message: " + e.getMessage());
-		} 		
 	}
 	
 	/*
@@ -190,27 +168,26 @@ public class Billing {
 		} 		
 	}
 	
-//	public void viewPayments() {
-//		try {
-//			Statement statement = conn.createStatement();
-//			String query = "SELECT * from Payment where uID = " + uID + "";
-//			
-//			statement.executeQuery(query);
-//	
-//			ResultSet result = statement.getResultSet();
-//			
-//			System.out.println();
-//			while(result.next()) {
-//				String payment = result.getString(1);
-//				System.out.println(payment);
-//			}	
-//		} catch (SQLException e) {
-//			System.out.println("There seems to be an error. Please try again");
-//			System.out.println("System message: " + e.getMessage());
-//		} 		
-//	}
-//	
-//	public void makePayment() {
-//		
-//	}
+	/*
+	 * Allows user to edit their current billing address
+	 */
+	public void editAddress() {
+		try {
+			System.out.println();
+			System.out.println("Please enter your updated address: ");
+			
+			String address = scanner.nextLine().trim();
+			Statement statement = conn.createStatement();
+			String query = "UPDATE Billing set address =  " + address + " where uID = " + uID + "";
+			
+			statement.executeUpdate(query);			
+			System.out.println();
+			System.out.print("Your address has been successfully updated. ");
+		} catch (SQLException e) {
+			System.out.println("There seems to be an error. Please try again");
+			System.out.println("System message: " + e.getMessage());
+		} 	
+	}
+	
+
 }
