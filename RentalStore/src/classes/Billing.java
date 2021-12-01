@@ -50,8 +50,6 @@ public class Billing {
 			String query = "INSERT into Billing values(" + uID + ",'" + name + "','" + address + "', 0)";
 			
 			statement.executeUpdate(query);
-	
-			ResultSet result = statement.getResultSet();
 			
 			System.out.println();
 			System.out.print("Your billing account has been succesfully setup. ");
@@ -68,7 +66,7 @@ public class Billing {
 	public void billingPortal() {
 		System.out.println();
 		System.out.println("What would you like to do today?");
-		System.out.println("[1] View Balance   [2] Add Balance   [3] View Address   [4] Billing   [5] Log out");
+		System.out.println("[1] View Balance   [2] Add Balance   [3] View Address   [4] Make payment   [5] Return");
 		System.out.println();
 		
 		String response = scanner.nextLine().trim();
@@ -81,6 +79,8 @@ public class Billing {
 			getAddress();
 		} else if (response.equals("4")) {
 			//other functionality
+			Payment pm = new Payment();
+			pm.paymentPortal(uID);
 		} else if (response.equals("5")) {
 			return;
 		}
@@ -158,7 +158,7 @@ public class Billing {
 			while (result.next()) {
 				System.out.print("Your current balance is: ");
 				int balance = result.getInt("balance");
-				System.out.print(balance);
+				System.out.print(balance + " dollars");
 			}	
 		} catch (SQLException e) {
 			System.out.println("There seems to be an error. Please try again");

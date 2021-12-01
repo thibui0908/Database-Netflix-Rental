@@ -57,14 +57,17 @@ FOREIGN KEY (uID) references User(uID),
 primary key (uID)
 );
 
+
 CREATE TABLE PAYMENT (
 pID int not null AUTO_INCREMENT,
 uID int,
-payment_date date,
+payment_date TIMESTAMP,
 payment_amount int,
 FOREIGN KEY (uID) references User(uID),
 primary key (pID)
 );
+
+ALTER TABLE PAYMENT AUTO_INCREMENT = 1001;
 
 CREATE TABLE Archive (
 show_id varchar(10),
@@ -168,6 +171,8 @@ call storedProcedure("2021-11-13");
 insert into User (name, age, rented, phone_number, password) values ('John Smith', 18, 0, '5103456789', 'abcd1234');
 insert into User (name, age, rented, phone_number, password) values ('Ella Kim', 25, 0, '4083456789', '1234abcd');
 insert into User (name, age, rented, phone_number, password) values ('Mary Martinez', 13, 0, '5108889999', 'efgh5678');
+
+insert into Billing (uID, name, address, balance) values (1003, 'Mary Martinez', '1 Washington Sq', 20);
 
 SET GLOBAL local_infile=1;
 
