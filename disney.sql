@@ -93,7 +93,7 @@ CREATE TRIGGER DecreaseCopies
 AFTER INSERT ON Rental
 FOR EACH ROW
 BEGIN
-	IF (copies >0 and New.show_id=show_id) THEN
+	IF ((SELECT copies from Titles where show_id=new.show_id)>0) THEN
 	UPDATE Titles SET copies= copies - 1 where show_id = new.show_id;
 	END IF;
 END;
