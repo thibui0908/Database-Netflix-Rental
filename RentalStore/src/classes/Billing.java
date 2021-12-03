@@ -188,6 +188,4 @@ public class Billing {
 			System.out.println("System message: " + e.getMessage());
 		} 	
 	}
-	
-
 }
