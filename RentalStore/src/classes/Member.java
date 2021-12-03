@@ -32,7 +32,6 @@ public class Member {
 
         System.out.println("Hi there! Select an option below:");
         System.out.println("[1] Sign in   [2] Sign up   [3] Exit");
-        System.out.println();
 
         String response = scanner.nextLine().trim();
 
@@ -199,7 +198,11 @@ public class Member {
             	String max = range[1];
             	
             	priceQuery += " and price in (select price from Titles where price <= " + max + " and price >=" + min + ")";
+            	param.remove(index);
+            	attribute.remove("price");
             }
+               
+            
             
             for (int i = 0; i < attribute.size(); i++) {
             	if (i == attribute.size() - 1) {

@@ -30,7 +30,6 @@ public class Admin {
 		
 		System.out.println("Hi there! Select an option below:");
         System.out.println("[1] Sign in   [2] Exit");
-        System.out.println();
 
         String response = scanner.nextLine().trim();
 

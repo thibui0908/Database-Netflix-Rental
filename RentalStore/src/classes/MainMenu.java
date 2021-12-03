@@ -14,6 +14,7 @@ public class MainMenu {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+        	System.out.println();
             System.out.println("Welcome to the Disney Rental Store!");
             System.out.println("Please choose an option to log in");
             System.out.println("\n");

@@ -97,18 +97,20 @@ primary key (show_id)
 
 /*Trigger to decrease # of copies once title is rented */
 
+/*
 DROP TRIGGER IF EXISTS DecreaseCopies;
 DELIMITER //
 CREATE TRIGGER DecreaseCopies
 AFTER INSERT ON Rental
 FOR EACH ROW
 BEGIN
-	IF (copies >0 and New.show_id=show_id) THEN
+	IF (copies  >0 and New.show_id=show_id) THEN
 	UPDATE Titles SET copies= copies - 1 where show_id = new.show_id;
 	END IF;
 END;
 //
 DELIMITER ;
+*/
 
 /*Trigger to remove rentals once title is returned */
 
@@ -202,3 +204,9 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS (show_id,type,title,director,cast,country,release_year,rating,duration,description,copies,price);
+
+insert into Rental(uID, show_id, check_out, overdue) values(1001, 's14', CURRENT_DATE, false);
+insert into Rental(uID, show_id, check_out, overdue) values(1001, 's45', CURRENT_DATE, false);
+insert into Rental(uID, show_id, check_out, overdue) values(1002, 's30', CURRENT_DATE, false);
+insert into Rental(uID, show_id, check_out, overdue) values(1002, 's14', 2020-10-10, true);
+insert into Rental(uID, show_id, check_out, overdue) values(1003, 's99', CURRENT_DATE, false);
