@@ -2,7 +2,9 @@ package classes;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Member {
@@ -54,7 +56,6 @@ public class Member {
      * Redirect to user's portal if succeed
      */
     public void signin() {
-        System.out.println();
         System.out.println("Enter your member ID: ");
         String uID = scanner.nextLine().trim();
 
@@ -63,7 +64,6 @@ public class Member {
             uID = scanner.nextLine().trim();
         }
 
-        System.out.println();
         System.out.println("Enter your password");
         String password = scanner.nextLine().trim();
 
@@ -107,105 +107,121 @@ public class Member {
      * For each activity we redirect to a different method
      */
     public void userPortal() {
-        System.out.println();
-        System.out.println("Welcome back! What would you like to do today?");
-        System.out.println("[1] Search   [2] Browse   [3] Rental   [4] Billing   [5] Log out");
-        System.out.println();
+    	
+    	while (!logout) {
+    		System.out.println("Welcome back! What would you like to do today?");
+            System.out.println("[1] Browse   [2] Rental   [3] Billing   [4] Log out");
 
-        String response = scanner.nextLine().trim();
+            String response = scanner.nextLine().trim();
+            
+            if (response.equals("1")) {
+                browse();
 
-        if (response.equals("1")) {
-            search();
-
-        } else if (response.equals("2")) {
-            browse();
-        } else if (response.equals("3")) {
-            rental();
-
-            /*
-             * Check current rentals for that user only
-             */
-
-        } else if (response.equals("4")) {
-            Billing billing = new Billing(uID, name);
-        } else if (response.equals("5")) {
-            logout = true;
-            return;
-        } else if (response.length() > 1) {
-            System.out.println("Please enter only the number option");
-        } else {
-            System.out.println("There seems to be an error. Please try again");
-        }
-        System.out.println();
-        return;
+            } else if (response.equals("2")) {
+                rental();
+            } else if (response.equals("3")) {
+                Billing billing = new Billing(uID, name);
+            } else if (response.equals("4")) {
+                logout = true;
+                return;
+            } else if (response.length() > 1) {
+                System.out.println("Please enter only the number option");
+            } else {
+                System.out.println("There seems to be an error. Please try again");
+            }
+    	}
     }
 
     public void browse() {
         System.out.println();
-        System.out.println("How would you like to browse?");
-        System.out.println();
-        System.out.println("[1] Director [2] Rating   [3] Year");
+        System.out.println("Enter (without spaces) your filter attributes: ");
+        System.out.println("[1] Title  [2] Rating  [3] Year   [4] Type    [5] Price");
 
         String response = scanner.nextLine().trim();
-
-        String director, rating, releaseYear = "";
-
-        if (response.equals("1")) {
-            System.out.println();
-            System.out.println("Enter a director's name: ");
-            director = scanner.nextLine().trim();
-            if (director.isEmpty()) {
-                System.out.println("Name must not be empty!");
-                director = scanner.nextLine().trim();
-            }
-
-        } else if (response.equals("2")) {
-            System.out.println();
-            System.out.println("Enter a rating type: ");
-            rating = scanner.nextLine().trim();
-            if (rating.isEmpty()) {
-                System.out.println("Rating must not be empty!");
-                rating = scanner.nextLine().trim();
-            }
-
-            searchResult("rating", rating);
-
-        } else if (response.equals("3")) {
-            System.out.println();
-            System.out.println("Enter a director's name: ");
-            releaseYear = scanner.nextLine().trim();
-            if (releaseYear.isEmpty()) {
-                System.out.println("Year must not be empty!");
-                releaseYear = scanner.nextLine().trim();
-            }
-        } else {
-            System.out.println("There seems to be an error. Please try again");
-        }
-
+        String[] att = response.split("");
+        
+        String title, rating, release_year, type, price = "";
+       
+        ArrayList<String> attribute = new ArrayList<>();
+        
+        ArrayList<String> param = new ArrayList<>();
+        		
+        if (!response.isEmpty()) {
+        	for (int i = 0; i < att.length; i++) {
+        		if (att[i].equals("1")) {
+        			System.out.println("Enter a title you'd like to search");
+        			title = scanner.nextLine().trim();
+        			attribute.add("title");
+        			param.add(title);  			
+        		} else if (att[i].equals("2")) {
+        			System.out.println("Enter a rating you'd like to search");
+        			rating = scanner.nextLine().trim();
+        			attribute.add("rating");
+        			param.add(rating);	
+        		} else if (att[i].equals("3")) {
+        			System.out.println("Enter a year you'd like to search");
+        			release_year = scanner.nextLine().trim();
+        			attribute.add("release_year");
+        			param.add(release_year);
+        		} else if (att[i].equals("4")) {
+        			System.out.println("Enter a type you'd like to search");
+        			type = scanner.nextLine().trim();
+        			attribute.add("type");
+        			param.add(type);
+        		} else if (att[i].equals("5")) {
+        			System.out.println("Enter a price range in the form of [min-max] you'd like to search");
+        			price = scanner.nextLine().trim();
+        			attribute.add("price");
+        			param.add(price);
+        		}
+        	}
+            
+        	searchResult(attribute, param);
+            
+         } else {
+        	 System.out.println("Please choose at least 1 attribute, try again");
+         }
+        return;
+        
     }
 
-    /*
-     * Search for a movie -> new method
-     * Enter title only
-     */
-    public void search() {
-        System.out.println();
-        System.out.println("Enter a title: ");
-
-        String name = scanner.nextLine().trim();
-
-        while (name.isEmpty()) {
-            System.out.println("Title must not be empty!");
-            name = scanner.nextLine().trim();
-        }
-
-        searchResult("title", name);
-    }
-
-    public void searchResult(String attribute, String param) {
+    public void searchResult(ArrayList<String> attribute, ArrayList<String> param) {
         try {
             Statement statement = conn.createStatement();
-            String query = "SELECT distinct title from Titles where " + attribute + "= '" + param + "'";
+            String query = "SELECT distinct title, release_year from Titles where ";
+            
+            String priceQuery = "";
+            
+            if (attribute.contains("price")) {
+         
+            	int index = attribute.indexOf("price");
+            	String[] range = param.get(index).split("-");
+            	String min = range[0];
+            	String max = range[1];
+            	
+            	priceQuery += " and price in (select price from Titles where price <= " + max + " and price >=" + min + ")";
+            }
+            
+            for (int i = 0; i < attribute.size(); i++) {
+            	if (i == attribute.size() - 1) {
+            		if (!attribute.get(i).equals("release_year")) {
+            			query += attribute.get(i) + "= '" + param.get(i) + "'";
+            		} else {
+            			query += attribute.get(i) + "= " + param.get(i);
+            		}
+            		
+            	} else {
+            		if (!attribute.get(i).equals("release_year")) {
+            			query += attribute.get(i) + "= '" + param.get(i) + "'" + " and ";
+            		} else {
+            			query += attribute.get(i) + "= " + param.get(i) + " and ";
+            		}
+            	}
+            }
+            
+            query += priceQuery;
+            
+            //System.out.println(query);
 
             statement.executeQuery(query);
 
@@ -215,13 +231,16 @@ public class Member {
             System.out.println("Here are your results: ");
 
             while (result.next()) {
-                System.out.println(result.getNString("title"));
+                System.out.println(result.getString("title") + " (" + result.getString("release_year") + ")");
             }
+            System.out.println();
 
         } catch (SQLException e) {
             System.out.println("There seems to be an error. Please try again");
             System.out.println("System message: " + e.getMessage());
         }
+        
+        return;
     }
 
     /*

@@ -36,6 +36,15 @@ primary key (uID)
 );
 ALTER TABLE USER AUTO_INCREMENT = 1001;
 
+CREATE TABLE Admin (
+aID int not null auto_increment,
+name varchar(50),
+password varchar(50),
+phone_number char(10),
+primary key (aID)
+);
+ALTER TABLE ADMIN AUTO_INCREMENT = 1001;
+
 SET SQL_MODE='ALLOW_INVALID_DATES';
 
 CREATE TABLE Rental (
@@ -93,7 +102,7 @@ CREATE TRIGGER DecreaseCopies
 AFTER INSERT ON Rental
 FOR EACH ROW
 BEGIN
-	IF ((SELECT copies from Titles where show_id=new.show_id)>0) THEN
+	IF (copies >0 and New.show_id=show_id) THEN
 	UPDATE Titles SET copies= copies - 1 where show_id = new.show_id;
 	END IF;
 END;
@@ -162,6 +171,14 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS adminLogin;
+DELIMITER //
+CREATE PROCEDURE adminLogin(IN param_aID INT, param_password varchar(50))
+BEGIN 
+	SELECT name FROM Admin where aID = param_aID and password = param_password ;
+END //
+DELIMITER ;
+
 /*Commands to test storing procedure */
 /*
 INSERT INTO Titles Values('s100', 'Movie', 'Adventures in Babysitting', 'Chris Columbus', 'Elisabeth Shue, Maia Brewton, Keith Coogan, Anthony Rapp, Calvin Levels, Vincent Phillip D\'Onofrio', 'United States', '1987', 'TV-PG', '102 min', 'A seemingly quiet night turns into a wild expedition for a teen babysitter.', '4', '6', NULL);
@@ -171,6 +188,8 @@ call storedProcedure("2021-11-13");
 insert into User (name, age, rented, phone_number, password) values ('John Smith', 18, 0, '5103456789', 'abcd1234');
 insert into User (name, age, rented, phone_number, password) values ('Ella Kim', 25, 0, '4083456789', '1234abcd');
 insert into User (name, age, rented, phone_number, password) values ('Mary Martinez', 13, 0, '5108889999', 'efgh5678');
+
+insert into Admin(name, password, phone_number) values ('Admin McAdmin', '1234', '51088888');
 
 insert into Billing (uID, name, address, balance) values (1003, 'Mary Martinez', '1 Washington Sq', 20);
 

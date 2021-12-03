@@ -77,7 +77,6 @@ public class Billing {
 		} else if (response.equals("3")) {
 			editAddress();
 		} else if (response.equals("4")) {
-
 			Payment pm = new Payment();
 			pm.paymentPortal(uID);
 		} else if (response.equals("5")) {

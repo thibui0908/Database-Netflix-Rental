@@ -1,5 +1,6 @@
 package classes;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,12 +17,101 @@ public class Admin {
 	String PASSWORD = "Monday2Tuesday3!";
 	Connection conn = null;
 	
+	private String uID;
+    private String name;
+    private boolean logout = false;
+	
 	public void adminlogin() {
 		try {
 			conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("Hi there! Select an option below:");
+        System.out.println("[1] Sign in   [2] Exit");
+        System.out.println();
+
+        String response = scanner.nextLine().trim();
+
+        if (response.equals("1")) {
+            adminSignin();
+        } else if (response.equals("2")) {
+        	logout = true;
+            return;
+        } else if (response.length() > 1) {
+            System.out.println("Please enter only the number option");
+        } else {
+            System.out.println("There seems to be an error. Please try again");
+        }
+	}
+	/*
+	 * Admin sign in: Only one administrator 
+	 * admin ID : 1001
+	 * password : 1234
+	 * name: Admin McAdmin
+	 */
+	
+	public void adminSignin() {
+		System.out.println("Enter your member ID: ");
+        String uID = scanner.nextLine().trim();
+
+        if (uID.length() != 4) {
+            System.out.println("Invalid user ID, please try again");
+            uID = scanner.nextLine().trim();
+        }
+
+        System.out.println("Enter your password");
+        String password = scanner.nextLine().trim();
+
+        if (password.isEmpty()) {
+            System.out.println("Password cannot be empty, try again!");
+            password = scanner.nextLine().trim();
+        }
+
+        try {
+            CallableStatement statement = conn.prepareCall("{CALL adminLogin(?,?)}");
+
+            statement.setInt(1, Integer.parseInt(uID));
+            statement.setString(2, password);
+
+            boolean result = statement.execute();
+
+            if (result) {
+                ResultSet rs = statement.getResultSet();
+                rs.next();
+                System.out.println("You have successfully signed in!");
+                System.out.println("Good to see you again, " + rs.getString(1) + "!\n");
+                this.name = rs.getString(1);
+                this.uID = uID;
+                this.logout = false;
+                adminPortal();
+            } else {
+
+                System.out.println("User cannot be found. Please try again");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("There seems to be an error. Please try again");
+            System.out.println("System message: " + e.getMessage());
+        }
+
+        adminlogin();
+	}
+	
+	public void adminPortal() {
+		 System.out.println("What would you like to do today?");
+	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Log out");
+
+	        String response = scanner.nextLine().trim();
+
+	        if (response.equals("1")) {
+	            getUserRentalInfo();
+	        } else if (response.equals("2")) {
+	            getMostPopularMovies();
+	        } else if (response.equals("3")) {
+	            return;
+	        }
 	}
 	
 	/*
