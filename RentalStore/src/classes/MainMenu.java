@@ -36,7 +36,7 @@ public class MainMenu {
 			else if (response.equals("2")) {
 				Admin ad = new Admin();
 				ad.adminlogin();
-				ad.getMostPopularMovies();
+				ad.getAverageAge();
 			} 
 			/*
 			 * Handles invalid requests

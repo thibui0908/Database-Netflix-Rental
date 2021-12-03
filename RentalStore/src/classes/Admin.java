@@ -87,4 +87,86 @@ public class Admin {
 			System.out.println("System message: " + e.getMessage());
 		} 	
 	}
+	
+	
+	/*
+	 * Returns the maximum number of copies of movies. 
+	 */
+	public void getMaximumCopies() {
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT MAX(Copies) AS Copy_amount FROM titles";
+			
+			statement.executeQuery(query);
+	
+			ResultSet result = statement.getResultSet();
+			
+			System.out.println();
+
+
+			while(result.next()) {
+				String copies = result.getString("Copy_amount");
+				System.out.print("The maximum number of copies is " + copies + ".");
+				System.out.println();
+			}	
+			System.out.println();
+		} catch (SQLException e) {
+			System.out.println("There seems to be an error. Please try again");
+			System.out.println("System message: " + e.getMessage());
+		} 	
+	}
+	
+	/*
+	 * Returns the cheapest movies to rent. 
+	 */
+	public void getCheapest() {
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT title from Titles where price = (select MIN(price) from Titles)";
+			
+			statement.executeQuery(query);
+	
+			ResultSet result = statement.getResultSet();
+			
+			System.out.println();
+			System.out.print("The cheapest movies to rent are: ");
+			System.out.println();
+
+			while(result.next()) {
+				String title = result.getString("title");
+				System.out.println(title);
+			}	
+			System.out.println();
+		} catch (SQLException e) {
+			System.out.println("There seems to be an error. Please try again");
+			System.out.println("System message: " + e.getMessage());
+		} 	
+	}
+	
+	/*
+	 * Returns the average user's age. 
+	 */
+	public void getAverageAge() {
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT AVG(age) AS avg_age FROM User";
+			
+			statement.executeQuery(query);
+	
+			ResultSet result = statement.getResultSet();
+			
+			System.out.println();
+
+			while(result.next()) {
+				int age = result.getInt("avg_age");
+				String avg_age = String.valueOf(age);
+				System.out.print("The average user age is " + avg_age + ".");
+				System.out.println();
+			}	
+			System.out.println();
+		} catch (SQLException e) {
+			System.out.println("There seems to be an error. Please try again");
+			System.out.println("System message: " + e.getMessage());
+		} 	
+	}
 }
