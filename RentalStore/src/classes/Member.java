@@ -107,7 +107,6 @@ public class Member {
      * For each activity we redirect to a different method
      */
     public void userPortal() {
-    	
     	while (!logout) {
     		System.out.println("Welcome back! What would you like to do today?");
             System.out.println("[1] Browse   [2] Rental   [3] Billing   [4] Log out");
@@ -118,7 +117,7 @@ public class Member {
                 browse();
 
             } else if (response.equals("2")) {
-                rental();
+            	Rental rental = new Rental(uID);
             } else if (response.equals("3")) {
                 Billing billing = new Billing(uID, name);
             } else if (response.equals("4")) {
@@ -241,61 +240,6 @@ public class Member {
         }
         
         return;
-    }
-
-    /*
-     * Insert a new user rental information
-     * Enter title key words and ask user to chose which title want to rental and then insert rental table
-     */
-    public void rental() {
-        try {
-            System.out.println("Enter title: ");
-            String title = scanner.nextLine().trim();
-
-            Statement statement = conn.createStatement();
-
-
-            String SearchTitlesQuery = "SELECT title FROM Titles WHERE title LIKE '%" + title + "%'";
-            statement.executeQuery(SearchTitlesQuery);
-            ResultSet titlesRs = statement.getResultSet();
-            System.out.println("Here are the matched titles: ");
-            while (titlesRs.next()) {
-                System.out.println(titlesRs.getNString("title"));
-            }
-            System.out.println("Please choose one to rent: ");
-            String selectedTitle = scanner.nextLine().trim();
-
-            //System.out.println("Choose the title you want o rent: ");
-
-
-            String findShowIDQuery = "SELECT show_id FROM Titles WHERE title = '" + selectedTitle + "'";
-
-
-            statement.executeQuery(findShowIDQuery);
-
-            ResultSet result = statement.getResultSet();
-
-            String showId = "";
-            while (result.next()) {
-                showId = result.getNString("show_id");
-                System.out.println("showId is: " + showId);
-            }
-
-
-            String checkoutDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            System.out.println("checkoutDate is: " + checkoutDate);
-            int overDue = 0;
-
-            String newRentalQuery = "INSERT INTO Rental VALUES (" +
-                    uID + ", '" + showId + "', '" + checkoutDate + "', " + overDue + ")";
-            System.out.println("newRentalQuery is: " + newRentalQuery);
-//            Statement statement2 = conn.createStatement();
-            statement.executeUpdate(newRentalQuery);
-
-        } catch (SQLException e) {
-            System.out.println("There seems to be an error. Please try again");
-            System.out.println("System message: " + e.getMessage());
-        }
     }
 
 
