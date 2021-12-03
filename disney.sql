@@ -7,6 +7,7 @@ drop table if exists User;
 drop table if exists Rental;
 drop table if exists Billing;
 drop table if exists Payment;
+drop table if exists Admin;
 
 CREATE TABLE Titles (
 show_id varchar(10),

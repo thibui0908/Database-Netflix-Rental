@@ -170,13 +170,9 @@ public class Rental {
                 //System.out.println("price is: " + price);
             }
 
-            String updateBillingQuery = "UPDATE Billing SET balance = balance - " + String.valueOf(price) + " WHERE uID = '" + uID + "'";
+            String updateBillingQuery = "UPDATE Billing SET balance = balance + " + String.valueOf(price) + " WHERE uID = '" + uID + "'";
             //System.out.println("updateBillingQuery is: " + updateBillingQuery);
             statement.executeUpdate(updateBillingQuery);
-
-            String addPaymentQuery = "INSERT INTO PAYMENT VALUES (NULL, '" + uID + "', '" + checkoutDate + "', " + String.valueOf(price) + ")";
-            //System.out.println("addPaymentQuery is: " + addPaymentQuery);
-            statement.executeUpdate(addPaymentQuery);
 
         } catch (SQLException e) {
             System.out.println("There seems to be an error. Please try again");
