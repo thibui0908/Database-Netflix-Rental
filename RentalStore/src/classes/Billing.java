@@ -177,7 +177,7 @@ public class Billing {
 			
 			String address = scanner.nextLine().trim();
 			Statement statement = conn.createStatement();
-			String query = "UPDATE Billing set address =  " + address + " where uID = " + uID + "";
+			String query = "UPDATE Billing set address =  '" + address + "' where uID = " + uID + "";
 			
 			statement.executeUpdate(query);			
 			System.out.println();
