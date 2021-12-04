@@ -316,7 +316,7 @@ public class Admin {
 	
 	public void adminPortal() {
 		 System.out.println("What would you like to do today?");
-	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory   [4] Test constraint keys  [5] Log out");
+	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory   [4] Test constraint keys  [5] Stored Procedure [6] Log out");
 
 	        String response = scanner.nextLine().trim();
 
@@ -329,8 +329,27 @@ public class Admin {
 	        }else if (response.equals("4")) {
 	        	testKeys();
 	        } else if (response.equals("5")) {
-	            return;
+	            storedProcedure();
+	        } else if (response.equals("6")) {
+	        	return;
 	        }
+	}
+	
+	public void storedProcedure() {
+        try {
+			System.out.println();
+			System.out.println("Please enter a date to archive data: ");
+			
+			String date = scanner.next();
+            CallableStatement statement = conn.prepareCall("{call storedProcedure(?)}");
+            statement.setString(1, date);
+            statement.execute();
+            
+        	System.out.println("Data successfully archived.");
+        } catch (SQLException e) {
+            System.out.println("There seems to be an error. Please try again");
+            System.out.println("System message: " + e.getMessage());
+        }
 	}
 	
 	public void testKeys() {
