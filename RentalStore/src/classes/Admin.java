@@ -316,7 +316,7 @@ public class Admin {
 	
 	public void adminPortal() {
 		 System.out.println("What would you like to do today?");
-	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory  [4] Log out");
+	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory   [4] Test constraint keys  [5] Log out");
 
 	        String response = scanner.nextLine().trim();
 
@@ -327,7 +327,22 @@ public class Admin {
 	        } else if (response.equals("3")){ 
 	        	inventory();
 	        }else if (response.equals("4")) {
+	        	testKeys();
+	        } else if (response.equals("5")) {
 	            return;
 	        }
+	}
+	
+	public void testKeys() {
+		try {
+			System.out.println();
+			Statement statement = conn.createStatement();
+	        String query = "insert into Payment(uID) values (9999)";
+	        System.out.println("Printed query : " + query);
+	        statement.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+            
 	}
 }

@@ -55,7 +55,7 @@ check_out date default '0000-00-00',
 overdue boolean default false,
 FOREIGN KEY (show_id) references Titles(show_id),
 FOREIGN KEY (uID) references User(uID),
-primary key (uID, show_id)
+primary key (uID, show_id,check_out)
 );
 
 CREATE TABLE BILLING (
@@ -208,5 +208,5 @@ insert into Rental(uID, show_id, check_out, overdue) values(1001, 's45', CURRENT
 insert into Rental(uID, show_id, check_out, overdue) values(1002, 's30', CURRENT_DATE, false);
 insert into Rental(uID, show_id, check_out, overdue) values(1002, 's14', 2020-10-10, true);
 insert into Rental(uID, show_id, check_out, overdue) values(1003, 's99', CURRENT_DATE, false);
-
+insert into Payment(uID,payment_date, payment_amount) values (1003, CURRENT_TIMESTAMP, 5);
 update Titles set rating = 'N/A' where rating = '';
