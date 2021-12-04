@@ -158,7 +158,9 @@ DELIMITER //
 CREATE PROCEDURE storedProcedure(IN cutoffDate DATE)
 BEGIN 
 	INSERT INTO Archive (SELECT show_id, type, title, director, cast, country, release_year, rating, duration, description, copies, price FROM Titles WHERE (updatedAt<cutoffDate));
+    SET FOREIGN_KEY_CHECKS=0;
 	DELETE FROM Titles WHERE (updatedAt<cutoffDate);
+	SET FOREIGN_KEY_CHECKS=1;
 END; //
 DELIMITER ;
 
@@ -180,11 +182,10 @@ BEGIN
 END //
 DELIMITER ;
 
-/*Commands to test storing procedure */
-/*
-INSERT INTO Titles Values('s100', 'Movie', 'Adventures in Babysitting', 'Chris Columbus', 'Elisabeth Shue, Maia Brewton, Keith Coogan, Anthony Rapp, Calvin Levels, Vincent Phillip D\'Onofrio', 'United States', '1987', 'TV-PG', '102 min', 'A seemingly quiet night turns into a wild expedition for a teen babysitter.', '4', '6', NULL);
-call storedProcedure("2021-11-13");
-*/
+-- /*Commands to test storing procedure */
+-- -- UPDATE titles set show_id = "s10" where show_id = "s10";
+-- call storedProcedure("2021-12-5");
+
 
 insert into User (name, age, rented, phone_number, password) values ('John Smith', 18, 0, '5103456789', 'abcd1234');
 insert into User (name, age, rented, phone_number, password) values ('Ella Kim', 25, 0, '4083456789', '1234abcd');
