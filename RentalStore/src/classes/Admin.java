@@ -269,12 +269,54 @@ public class Admin {
             System.out.println("System message: " + e.getMessage());
         }
 
-        adminlogin();
+        adminPortal();
 	}
+    
+    public void inventory() {
+    	try {
+            Statement statement = conn.createStatement();
+            String query = "select COUNT(title), rating FROM Titles where type = 'Movie' group by rating having count(copies) > 0";
+
+            statement.executeQuery(query);
+
+            ResultSet result = statement.getResultSet();
+
+            System.out.println("\nHere is your movie inventory");
+            System.out.print("Quantity (Rating)");
+
+            while (result.next()) {
+                String title = result.getString("COUNT(title)");
+                String rating = result.getString("rating");
+
+                System.out.println(title + " (" + rating + ")");
+            }
+            
+            String queryShow = "select COUNT(title), rating FROM Titles where type = 'TV Show' group by rating having count(copies) > 0";
+            statement.executeQuery(queryShow);
+            ResultSet resultS = statement.getResultSet();
+
+            System.out.println("\nHere is your TV Show inventory");
+            System.out.print("Quantity (Rating)");
+
+            while (resultS.next()) {
+                String title = resultS.getString("COUNT(title)");
+                String rating = resultS.getString("rating");
+
+                System.out.println(title + " (" + rating + ")");
+            }
+            
+            System.out.println();
+            
+        } catch (SQLException e) {
+            System.out.println("There seems to be an error. Please try again");
+            System.out.println("System message: " + e.getMessage());
+        }
+    	adminPortal();
+    }
 	
 	public void adminPortal() {
 		 System.out.println("What would you like to do today?");
-	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Log out");
+	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory  [4] Log out");
 
 	        String response = scanner.nextLine().trim();
 
@@ -282,7 +324,9 @@ public class Admin {
 	            getUserRentalInfo();
 	        } else if (response.equals("2")) {
 	            getMostPopularMovies();
-	        } else if (response.equals("3")) {
+	        } else if (response.equals("3")){ 
+	        	inventory();
+	        }else if (response.equals("4")) {
 	            return;
 	        }
 	}

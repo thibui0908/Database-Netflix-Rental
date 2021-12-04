@@ -208,3 +208,5 @@ insert into Rental(uID, show_id, check_out, overdue) values(1001, 's45', CURRENT
 insert into Rental(uID, show_id, check_out, overdue) values(1002, 's30', CURRENT_DATE, false);
 insert into Rental(uID, show_id, check_out, overdue) values(1002, 's14', 2020-10-10, true);
 insert into Rental(uID, show_id, check_out, overdue) values(1003, 's99', CURRENT_DATE, false);
+
+update Titles set rating = 'N/A' where rating = '';

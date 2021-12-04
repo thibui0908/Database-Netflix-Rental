@@ -98,7 +98,7 @@ public class Rental {
 
             String newRentalQuery = "INSERT INTO Rental VALUES (" +
                     uID + ", '" + showId + "', '" + checkoutDate + "', " + overDue + ")";
-            System.out.println("newRentalQuery is: " + newRentalQuery);
+            //System.out.println("newRentalQuery is: " + newRentalQuery);
 //            Statement statement2 = conn.createStatement();
             statement.executeUpdate(newRentalQuery);
 
@@ -145,7 +145,7 @@ public class Rental {
 
 
             String deleteRentalQuery = "DELETE FROM Rental WHERE show_id = '" + showId + "'";
-            System.out.println("deleteRentalQuery is: " + deleteRentalQuery);
+            //System.out.println("deleteRentalQuery is: " + deleteRentalQuery);
             statement.executeUpdate(deleteRentalQuery);
             System.out.println("Thank you for returning the film/video.");
         } catch (SQLException e) {
