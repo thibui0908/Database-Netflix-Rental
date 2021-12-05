@@ -38,8 +38,6 @@ public class MainMenu {
             else if (response.equals("2")) {
                 Admin ad = new Admin();
                 ad.adminlogin();
-                ad.getAverageAge();
-                ad.getOverdueOrPositiveBalanceUser();
             }
             /*
              * Handles invalid requests

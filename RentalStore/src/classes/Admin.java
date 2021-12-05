@@ -261,7 +261,7 @@ public class Admin {
 
             System.out.println("Here are the uIDs: ");
             while (result.next()) {
-                System.out.println(result.getNString("uID"));
+                System.out.println(result.getString("uID"));
             }
             System.out.println();
         } catch (SQLException e) {
@@ -316,7 +316,7 @@ public class Admin {
 	
 	public void adminPortal() {
 		 System.out.println("What would you like to do today?");
-	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory   [4] Test constraint keys  [5] Stored Procedure [6] Log out");
+	        System.out.println("[1] Rental Information   [2] Top Rental  [3] Inventory   [4] Outstanding Balances  [5] Stored Procedure   [6] User Base     [7] Log out");
 
 	        String response = scanner.nextLine().trim();
 
@@ -327,10 +327,12 @@ public class Admin {
 	        } else if (response.equals("3")){ 
 	        	inventory();
 	        }else if (response.equals("4")) {
-	        	testKeys();
+	        	getOverdueOrPositiveBalanceUser();
 	        } else if (response.equals("5")) {
 	            storedProcedure();
 	        } else if (response.equals("6")) {
+	        	getAverageAge();
+	        } else if (response.equals("7")) {
 	        	return;
 	        }
 	}
